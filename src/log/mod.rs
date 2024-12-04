@@ -1,3 +1,8 @@
+#![deny(clippy::unwrap_used)]
+#![deny(clippy::expect_used)]
+#![deny(clippy::panic)]
+#![deny(unused_must_use)]
+
 mod log;
 
 /// Used to create and update actions done by the program using a log file.
@@ -23,7 +28,7 @@ impl LogFile {
     /// Creates a file "output.log" in the working directory that can be written out to.
     /// # Examples
     /// ```
-    /// let mut test = davids_awesome_library::log::LogFile::new();
+    /// let mut test = davids_standard_library::log::LogFile::new();
     /// test.write_log("success");
     /// ```
     

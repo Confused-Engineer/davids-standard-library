@@ -1,9 +1,12 @@
-use std::io::*;
+#![deny(clippy::unwrap_used)]
+#![deny(clippy::expect_used)]
+#![deny(clippy::panic)]
+#![deny(unused_must_use)]
 
 /// # Return the current users Home Directory
 /// Windows: C:\Users\USERNAME
 /// Linux/Mac: /home/USERNAME
-pub fn get_home() -> Result<String>
+pub fn get_home() -> std::io::Result<String>
 {
     #[cfg(target_os="windows")]
     let home = std::env::var_os("userprofile");
@@ -12,14 +15,17 @@ pub fn get_home() -> Result<String>
     
     if let Some(home) = home
     {
-        return Ok(home.to_str().unwrap().trim().to_string())
+        if let Ok(home) = home.into_string()
+        {
+            return Ok(home)
+        }   
     }
 
     Err(std::io::Error::new(std::io::ErrorKind::NotFound, "Path is Empty"))
 }
 
 /// Returns the directory of the executable, excluding the executable itself 
-pub fn get_exe_dir() -> Result<String>
+pub fn get_exe_dir() -> std::io::Result<String>
 {
     let exe_path = std::env::current_exe()?.display().to_string();
     
@@ -39,7 +45,7 @@ pub fn get_exe_dir() -> Result<String>
 
 
 /// sets the working directory (pwd) to the directory of the executable
-pub fn set_exe_dir() -> Result<()>
+pub fn set_exe_dir() -> std::io::Result<()>
 {
     let exe_path = std::env::current_exe()?.display().to_string();
     
@@ -56,5 +62,4 @@ pub fn set_exe_dir() -> Result<()>
     }
 
     Err(std::io::Error::new(std::io::ErrorKind::NotFound, "Path is Empty"))
-
 }
